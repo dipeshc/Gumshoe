@@ -1,0 +1,88 @@
+@{
+	var tracker = (Gumshoe.Core.Trackers.MonoTorrentTrackerBase) @Model.Tracker;
+}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Gumshoe Status</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
+	    <script src="//code.jquery.com/jquery.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Gumshoe Status</h1><br />
+			
+			<div class="row">
+				<div class="col-lg-10">
+					<p class="lead">Torrents currently being tracked</p>
+				</div>
+				<div class="col-lg-2">
+					<ul class="nav nav-pills">
+						<li class="dropdown pull-right" id="endpointmenu">
+						    <a class="dropdown-toggle" data-toggle="dropdown" href="#endpointmenu">Endpoints<b class="caret"></b></a>
+					        <ul class="dropdown-menu ">
+					        @foreach(var endpoint in tracker.Endpoints)
+					        {
+							      <li><a>@endpoint</a></li>
+							}
+						    </ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			@foreach (var torrentManager in tracker.OrderBy(t => t.Trackable.Name))
+			{
+				<div class="well">
+					<div class="row">
+						<div class="col-lg-6">
+							<h4>
+								@torrentManager.Trackable.Name
+								<small style="display:block;margin-top:10px;">@torrentManager.Trackable.InfoHash.ToString()</small>
+							</h4>
+						</div>
+						<div class="col-lg-2"><h4><a data-toggle="tooltip" title="Connected incomplete downloads">L @torrentManager.Incomplete</a></h4></div>
+						<div class="col-lg-2"><h4><a data-toggle="tooltip" title="Connected completed downloads">S @torrentManager.Complete</a></h4></div>
+						<div class="col-lg-2"><h4><a data-toggle="tooltip" title="Total number of completed downloads"># @torrentManager.Downloaded</a></h4></div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-lg-2"><strong>Clients</strong></div>
+						<div class="col-lg-3"><strong>&darr; Speed/Total</strong></div>
+						<div class="col-lg-3"><strong>&uarr; Speed/Total</strong></div>
+						<div class="col-lg-2"><strong>Remaining</strong></div>
+						<div class="col-lg-2"><strong>Last connected</strong></div>
+					</div>
+					@foreach (var peer in torrentManager.GetPeers().OrderBy(p => p.ClientAddress.ToString()))
+					{
+						var downloadedInMB = Math.Round(peer.Downloaded / Math.Pow(2, 20), 2);
+						var downloadSpeedInKBs = Math.Round(peer.DownloadSpeed / Math.Pow(2, 10), 2);
+						var uploadedInMB = Math.Round(peer.Uploaded / Math.Pow(2, 20), 2);
+						var uploadSpeedInKBs = Math.Round(peer.UploadSpeed / Math.Pow(2, 10), 2);
+						var remainingInMB = Math.Round(peer.Remaining / Math.Pow(2, 20), 2); 
+						<div class="row">
+							<div class="col-lg-2">@peer.ClientAddress</div>
+							<div class="col-lg-3">
+								<div class="row">
+									<div class="col-lg-6">@downloadSpeedInKBs KB/s</div>
+									<div class="col-lg-6">@downloadedInMB MB</div>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="row">
+									<div class="col-lg-6">@uploadSpeedInKBs KB/s</div>
+									<div class="col-lg-6">@uploadedInMB MB</div>
+								</div>
+							</div>
+							<div class="col-lg-2">@remainingInMB MB</div>
+							<div class="col-lg-2">@peer.LastAnnounceTime.ToString("yyyy-MM-dd hh:mm:ss")</div>
+						</div>
+					}
+				</div>
+			}
+		</div>
+		<script>$('[data-toggle=tooltip]').tooltip();$('.dropdown-toggle').dropdown();</script>
+	</body>
+</html>
