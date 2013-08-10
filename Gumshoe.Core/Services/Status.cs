@@ -23,7 +23,7 @@ namespace Gumshoe.Core.Services
 
 		public object Any(StatusRequest request)
 		{
-			return RequestContext.ToOptimizedResultUsingCache (Cache, statusCacheKey, new TimeSpan (0, 0, 10), () => 
+			return RequestContext.ToOptimizedResultUsingCache (Cache, statusCacheKey, new TimeSpan (0, 0, 5), () => 
 			{
 				return Razor.Resolve("status.cshtml", new { Tracker = Tracker }).Run(new ExecuteContext());
 			});

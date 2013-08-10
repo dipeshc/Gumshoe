@@ -32,14 +32,24 @@
 					</ul>
 				</div>
 			</div>
-			
+			@if(!tracker.Any())
+			{
+				<p class="lead text-info text-center"><small><em>Nothing found, well isn't that just <b>boring!</b></em></small></p>
+			}
 			@foreach (var torrentManager in tracker.OrderBy(t => t.Trackable.Name))
 			{
 				<div class="well">
 					<div class="row">
 						<div class="col-lg-6">
 							<h4>
-								@torrentManager.Trackable.Name
+								@if(torrentManager.Trackable.Name ==  torrentManager.Trackable.InfoHash.ToString())
+								{
+									<a data-toggle="tooltip" title="Auto registered on first connection">Anonymous</a>
+								}
+								else
+								{
+									@torrentManager.Trackable.Name
+								}
 								<small style="display:block;margin-top:10px;">@torrentManager.Trackable.InfoHash.ToString()</small>
 							</h4>
 						</div>
