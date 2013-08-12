@@ -11,7 +11,7 @@ using ServiceStack.WebHost.Endpoints;
 
 namespace Gumshoe.Core
 {
-	public class AppHost : AppHostBase
+	public class AppHost : AppHostHttpListenerBase
 	{
 		public readonly MonoTorrentTrackerBase MonoTorrentTracker;
 

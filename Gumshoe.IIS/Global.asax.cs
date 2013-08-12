@@ -14,7 +14,7 @@ namespace Gumshoe
 			var trackerBroadcastDomain = ConfigurationManager.AppSettings ["TrackerBroadcastDomain"];
 			var trackerPort = int.Parse (ConfigurationManager.AppSettings ["TrackerPort"]);
 			var torrentsDirectory = ConfigurationManager.AppSettings ["TorrentsDirectory"];
-			var announceIntervalInSeconds = TimeSpan.FromSeconds (double.Parse (ConfigurationManager.AppSettings ["AnnounceIntervalInSeconds"]));
+			var announceIntervalInSeconds = TimeSpan.FromSeconds (int.Parse (ConfigurationManager.AppSettings ["AnnounceIntervalInSeconds"]));
 			var allowUnregisteredTorrents = bool.Parse (ConfigurationManager.AppSettings ["AllowUnregisteredTorrents"]);
 
 			// Create torrents directory.
